@@ -105,7 +105,7 @@
 - (void)show
 {
     __weak typeof(self) weakSelf = self;
-    [UIView animateWithDuration:0.4 animations:^
+    [UIView animateWithDuration:0.3 animations:^
      {
          self.tableView.frame = CGRectMake(0, weakSelf.frame.size.height-weakSelf.tableViewHeight, weakSelf.frame.size.width, weakSelf.tableViewHeight);
          self.backgroundColor = [UIColor colorWithRed:0/255.0
@@ -132,7 +132,7 @@
 - (void)remove
 {
     __weak typeof(self) weakSelf = self;
-    [UIView animateWithDuration:0.4 animations:^
+    [UIView animateWithDuration:0.3 animations:^
      {
          weakSelf.tableView.frame = CGRectMake(0, weakSelf.frame.size.height,weakSelf.frame.size.width , weakSelf.tableViewHeight);
          weakSelf.backgroundColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:0];
@@ -169,9 +169,12 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(sheetView:didSelectRowAtIndex:)]) {
-        [_delegate sheetView:self didSelectRowAtIndex:indexPath.row];
-    }
+    [self remove];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(sheetView:didSelectRowAtIndex:)]) {
+            [self.delegate sheetView:self didSelectRowAtIndex:indexPath.row];
+        }
+    });
 }
 
 @end
